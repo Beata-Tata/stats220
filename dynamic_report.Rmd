@@ -25,7 +25,6 @@ h2 {
 library(tidyverse)
 # Read the published CSV file from Google Sheets
 logged_data <- read_csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQkoaZFMThLW3Oqnfglewth8lXEt3Ip31dbmbzfREn9BJh1t5LT37sSSuy3h8JfRsQL-8JLou9MCCr3/pub?gid=2012210349&single=true&output=csv")
-logged_data
 ```
 
 ## Part D

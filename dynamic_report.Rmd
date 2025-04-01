@@ -1,0 +1,113 @@
+---
+title: My dynamic report
+output: html_fragment
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE, error=FALSE)
+
+```
+
+```{css}
+body {
+  background-color: #F0F8FF;  
+  font-family: "Comic Sans MS";  
+}
+h2 {
+  color: #F79573;  
+  text-decoration: underline;  
+}
+```
+
+```{r}
+# Part C
+# Load tidyverse
+library(tidyverse)
+# Read the published CSV file from Google Sheets
+logged_data <- read_csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQkoaZFMThLW3Oqnfglewth8lXEt3Ip31dbmbzfREn9BJh1t5LT37sSSuy3h8JfRsQL-8JLou9MCCr3/pub?gid=2012210349&single=true&output=csv")
+```
+
+## Part D
+```{r}
+# Rename columns for better readability
+latest_data <- logged_data %>%
+  rename(
+    transport_mode = `Which mode of public transportation did you use today?`,
+    commute_time = `How many minutes did you spend on your commute today?`,
+    day_type = `Was today a weekday or a weekend?`,
+    commute_rating = `Rate your commuting experience on a scale from 1 to 5`,
+    crowding = `How crowded was the public transport today?`
+  )
+```
+
+## --- Bar Chart 1
+
+```{r}
+
+# Plot: Commute time distribution
+latest_data %>%
+  ggplot() +
+  geom_bar(aes(x = commute_time), fill = "#00BFC4") +
+  labs(
+    title = "Distribution of Commute Time",
+    subtitle = "How long people spend commuting each day",
+    caption = "Source: Public Transport Survey",
+    x = "Commute Time (minutes)",
+    y = "Number of Responses"
+  )
+
+# Summary: commute time
+mean_commute <- mean(latest_data$commute_time, na.rm = TRUE)
+max_commute <- max(latest_data$commute_time, na.rm = TRUE)
+
+# comment
+paste("The average commute time is", round(mean_commute, 1), "minutes.")
+paste("The longest commute time recorded is", max_commute, "minutes.")
+```
+
+## --- Bar Chart 2
+```{r}
+# Plot: Commute rating distribution
+latest_data %>%
+  ggplot() +
+  geom_bar(aes(x = commute_rating), fill = "#F8766D") +
+  labs(
+    title = "Distribution of Commute Ratings",
+    subtitle = "How people rated their commuting experience (1 = worst, 5 = best)",
+    caption = "Source: Public Transport Survey",
+    x = "Commute Rating",
+    y = "Number of Responses"
+  )
+
+# Summary: commute rating
+mean_rating <- mean(as.numeric(as.character(latest_data$commute_rating)), na.rm = TRUE)
+length_rating <- length(na.omit(latest_data$commute_rating))
+
+# comment
+paste("The average commute rating is", round(mean_rating, 2))
+paste("There were", length_rating, "valid ratings collected.")
+
+```
+
+```{r}
+# magick library 
+library(magick)
+
+# Read the original GIF
+catbus_gif <- image_read("https://i.pinimg.com/originals/f1/ca/bf/f1cabf15f3e299db1e1d7e96b340124c.gif")
+
+# Add text on center of the GIF
+catbus_with_text <- image_annotate(
+  catbus_gif,
+  text = "Cat Bus",             # Text to display
+  gravity = "center",          # Position in the center
+  color = "yellow",            # Text color
+  size = 20,                   # Font size
+  font = "Comic Sans MS",      # Cute font style
+  weight = 700                 # Bold weight
+)
+
+# the result
+catbus_with_text
+
+```
